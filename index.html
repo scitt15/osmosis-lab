@@ -1,0 +1,2219 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="서해고 통합과학 고1 삼투 가상실험실 - 덕근T" />
+  <title>서해고 통합과학 삼투 가상실험실</title>
+  <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet" />
+  <style>
+    :root {
+      --ink: #102033;
+      --muted: #64748b;
+      --soft: #f1f7fb;
+      --paper: #ffffff;
+      --line: #dbeafe;
+      --line-strong: #b7d8ff;
+      --primary: #0284c7;
+      --primary-strong: #0369a1;
+      --primary-soft: #e0f2fe;
+      --green: #16a34a;
+      --green-soft: #dcfce7;
+      --amber: #d97706;
+      --amber-soft: #fef3c7;
+      --rose: #dc2626;
+      --rose-soft: #fee2e2;
+      --teal: #0f766e;
+      --teal-soft: #ccfbf1;
+      --violet: #6d28d9;
+      --violet-soft: #ede9fe;
+      --shadow: 0 22px 70px rgba(15, 23, 42, 0.12);
+      --shadow-soft: 0 10px 28px rgba(15, 23, 42, 0.08);
+      --radius-xl: 28px;
+      --radius-lg: 22px;
+      --radius-md: 16px;
+      --radius-sm: 12px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      min-height: 100vh;
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+      color: var(--ink);
+      background: linear-gradient(135deg, #f8fbff 0%, #eef8ff 48%, #f8fafc 100%);
+      overflow-x: hidden;
+      word-break: keep-all;
+    }
+
+    button, input, textarea, select { font: inherit; }
+    button { border: 0; }
+    textarea { resize: vertical; }
+    .nowrap { white-space: nowrap; }
+
+    .app-shell {
+      width: min(1240px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 26px 0 40px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .brand-mini {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--primary-strong);
+      font-weight: 950;
+      letter-spacing: -0.02em;
+    }
+
+    .lab-mark {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      background: var(--primary-soft);
+      border: 1px solid var(--line-strong);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .teacher-open-btn,
+    .mini-btn,
+    .primary-btn,
+    .ghost-btn,
+    .danger-btn,
+    .condition-btn,
+    .tab-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease, background 0.16s ease;
+      white-space: nowrap;
+      user-select: none;
+    }
+
+    .teacher-open-btn {
+      padding: 11px 16px;
+      background: #fff;
+      color: var(--ink);
+      border: 1px solid #dbeafe;
+      box-shadow: var(--shadow-soft);
+      font-weight: 950;
+    }
+
+    .teacher-open-btn:hover,
+    .mini-btn:hover,
+    .primary-btn:hover,
+    .ghost-btn:hover,
+    .danger-btn:hover,
+    .condition-btn:hover,
+    .tab-btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.45fr 0.8fr;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    .hero-card,
+    .goal-card,
+    .panel,
+    .stepper,
+    .canvas-card,
+    .side-card,
+    .teacher-panel,
+    .teacher-banner {
+      background: rgba(255, 255, 255, 0.95);
+      border: 1px solid rgba(191, 219, 254, 0.88);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+
+    .hero-card {
+      border-radius: var(--radius-xl);
+      padding: clamp(22px, 3.2vw, 38px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-card::after {
+      display: none;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      margin-bottom: 14px;
+      border-radius: 999px;
+      background: var(--teal-soft);
+      color: var(--teal);
+      font-size: 13px;
+      font-weight: 950;
+      white-space: nowrap;
+    }
+
+    h1 {
+      position: relative;
+      z-index: 1;
+      font-size: clamp(30px, 4.3vw, 54px);
+      line-height: 1.04;
+      letter-spacing: -0.065em;
+      font-weight: 950;
+      margin-bottom: 14px;
+      word-break: keep-all;
+    }
+
+    .gradient-text {
+      background: linear-gradient(135deg, #0f766e, #0284c7 56%, #1d4ed8);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero-description {
+      position: relative;
+      z-index: 1;
+      max-width: 760px;
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.65;
+      word-break: keep-all;
+      overflow-wrap: normal;
+      text-wrap: pretty;
+    }
+
+    .hero-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: #fff;
+      border: 1px solid var(--line);
+      color: var(--primary-strong);
+      font-weight: 900;
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    .goal-card {
+      border-radius: var(--radius-xl);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .goal-card h2,
+    .teacher-panel h2,
+    .side-card h2,
+    .screen-title h2 {
+      font-size: 20px;
+      letter-spacing: -0.035em;
+    }
+
+    .goal-list {
+      display: grid;
+      gap: 10px;
+      list-style: none;
+    }
+
+    .goal-list li {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 15px;
+    }
+
+    .goal-list b { color: var(--ink); }
+
+    .teacher-panel {
+      border-radius: var(--radius-lg);
+      margin-bottom: 18px;
+      overflow: hidden;
+    }
+
+    .teacher-inner {
+      padding: 20px;
+      display: grid;
+      gap: 16px;
+    }
+
+    .teacher-title-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .teacher-login {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      padding: 14px;
+      border-radius: var(--radius-md);
+      background: #f8fbff;
+      border: 1px solid var(--line);
+    }
+
+    .teacher-login input {
+      width: 180px;
+      max-width: 100%;
+      padding: 12px 14px;
+      border-radius: var(--radius-sm);
+      border: 1px solid #cbd5e1;
+      outline: none;
+      font-weight: 900;
+    }
+
+    .teacher-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(160px, 1fr));
+      gap: 10px;
+    }
+
+    .teacher-control,
+    .teacher-action {
+      border-radius: var(--radius-md);
+      border: 1px solid var(--line);
+      background: #f8fbff;
+      padding: 13px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--ink);
+      font-weight: 850;
+      min-height: 48px;
+    }
+
+    .teacher-control input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--primary);
+      flex: 0 0 auto;
+    }
+
+    .teacher-control span { white-space: nowrap; }
+
+    .teacher-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .teacher-speed {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      padding: 12px 14px;
+      border-radius: var(--radius-md);
+      background: #f8fbff;
+      border: 1px solid var(--line);
+      color: var(--muted);
+      font-weight: 850;
+    }
+
+    .teacher-speed input { flex: 1; min-width: 160px; accent-color: var(--primary); }
+
+    .teacher-banner {
+      display: none;
+      margin-bottom: 16px;
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+      color: var(--violet);
+      background: rgba(237, 233, 254, 0.78);
+      font-weight: 950;
+    }
+
+    .teacher-active .teacher-banner { display: flex; justify-content: space-between; gap: 10px; align-items: center; }
+
+    .stepper {
+      border-radius: var(--radius-lg);
+      padding: 12px;
+      margin-bottom: 18px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .step-item {
+      border: 1px solid transparent;
+      border-radius: var(--radius-md);
+      padding: 13px 14px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      color: var(--muted);
+      background: #f8fbff;
+    }
+
+    .step-number {
+      width: 30px;
+      height: 30px;
+      display: grid;
+      place-items: center;
+      border-radius: 999px;
+      background: #e2e8f0;
+      color: #475569;
+      font-weight: 950;
+      flex: 0 0 auto;
+    }
+
+    .step-label {
+      font-weight: 950;
+      white-space: nowrap;
+      letter-spacing: -0.02em;
+    }
+
+    .step-item.active {
+      background: var(--primary-soft);
+      border-color: var(--line-strong);
+      color: var(--primary-strong);
+    }
+
+    .step-item.active .step-number { background: var(--primary); color: #fff; }
+    .step-item.done .step-number { background: var(--green); color: #fff; }
+
+    .main-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 340px;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .panel,
+    .side-card {
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+    }
+
+    .panel-body,
+    .side-body { padding: clamp(18px, 2.8vw, 28px); }
+
+    .screen-title {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      align-items: flex-start;
+      margin-bottom: 18px;
+    }
+
+    .screen-title p {
+      color: var(--muted);
+      line-height: 1.6;
+      margin-top: 7px;
+      word-break: keep-all;
+      overflow-wrap: normal;
+      text-wrap: pretty;
+    }
+
+    .experiment-tabs {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .tab-btn {
+      border: 1px solid var(--line);
+      background: #f8fbff;
+      color: var(--muted);
+      padding: 14px 16px;
+      font-weight: 950;
+      border-radius: var(--radius-md);
+      min-height: 54px;
+    }
+
+    .tab-btn.active {
+      border-color: var(--primary);
+      color: var(--primary-strong);
+      background: var(--primary-soft);
+      box-shadow: 0 10px 24px rgba(2, 132, 199, 0.12);
+    }
+
+    .activity-note {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      background: #f8fbff;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      color: var(--muted);
+      line-height: 1.55;
+      margin-bottom: 16px;
+    }
+
+    .activity-note strong { color: var(--ink); }
+
+    .prediction-grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .prediction-card {
+      display: grid;
+      grid-template-columns: 230px minmax(0, 1fr);
+      gap: 12px;
+      padding: 14px;
+      background: #ffffff;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .condition-mini {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .condition-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--ink);
+      font-size: 17px;
+      font-weight: 950;
+      letter-spacing: -0.02em;
+    }
+
+    .condition-title .label { white-space: nowrap; }
+
+    .condition-sub {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.45;
+      word-break: keep-all;
+      overflow-wrap: normal;
+      text-wrap: pretty;
+    }
+
+    .prediction-card textarea,
+    .lab-note textarea,
+    .compare-write textarea {
+      width: 100%;
+      min-height: 92px;
+      border: 1px solid #cbd5e1;
+      border-radius: var(--radius-md);
+      padding: 14px;
+      outline: none;
+      line-height: 1.55;
+      color: var(--ink);
+      background: #fbfdff;
+      font-weight: 650;
+    }
+
+    .prediction-card textarea:focus,
+    .lab-note textarea:focus,
+    .compare-write textarea:focus,
+    .teacher-login input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(2, 132, 199, 0.12);
+      background: #fff;
+    }
+
+    .screen-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      margin-top: 16px;
+    }
+
+    .primary-btn,
+    .ghost-btn,
+    .danger-btn,
+    .mini-btn {
+      font-weight: 950;
+      padding: 12px 16px;
+    }
+
+    .primary-btn {
+      background: var(--primary);
+      color: #fff;
+      box-shadow: 0 12px 26px rgba(2, 132, 199, 0.25);
+    }
+
+    .ghost-btn {
+      background: #fff;
+      color: var(--ink);
+      border: 1px solid var(--line);
+    }
+
+    .danger-btn {
+      background: var(--rose);
+      color: #fff;
+      box-shadow: 0 12px 26px rgba(220, 38, 38, 0.18);
+    }
+
+    .mini-btn {
+      background: #f8fbff;
+      color: var(--primary-strong);
+      border: 1px solid var(--line);
+      padding: 10px 12px;
+      font-size: 14px;
+    }
+
+    button:disabled,
+    textarea:disabled,
+    input:disabled {
+      opacity: 0.55;
+      cursor: not-allowed !important;
+      transform: none !important;
+    }
+
+    .canvas-toolbar {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .lab-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      background: var(--teal-soft);
+      color: var(--teal);
+      font-weight: 950;
+      white-space: nowrap;
+    }
+
+    .canvas-card {
+      border-radius: var(--radius-lg);
+      padding: 12px;
+      background: #ffffff;
+    }
+
+    .canvas-frame {
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      min-height: 360px;
+      border-radius: var(--radius-md);
+      background: #f8fcff;
+      border: 1px solid #dbeafe;
+      overflow: hidden;
+      position: relative;
+    }
+
+    #labCanvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+      touch-action: none;
+    }
+
+    .condition-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .condition-btn {
+      min-height: 74px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      background: #fff;
+      color: var(--ink);
+      box-shadow: var(--shadow-soft);
+      padding: 13px 12px;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
+      text-align: left;
+      gap: 4px;
+    }
+
+    .condition-btn strong {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 15px;
+      line-height: 1.2;
+      white-space: nowrap;
+      max-width: 100%;
+    }
+
+    .condition-btn span {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.35;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
+    }
+
+    .condition-btn strong span:last-child {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .condition-btn.active {
+      border-color: var(--primary);
+      background: var(--primary-soft);
+      color: var(--primary-strong);
+      box-shadow: 0 12px 28px rgba(2, 132, 199, 0.16);
+    }
+
+    .lab-status {
+      margin-top: 14px;
+      border-radius: var(--radius-md);
+      padding: 13px 14px;
+      line-height: 1.55;
+      color: var(--ink);
+      background: #f8fbff;
+      border: 1px solid var(--line);
+      font-weight: 820;
+      word-break: keep-all;
+      overflow-wrap: normal;
+      text-wrap: pretty;
+    }
+
+    .lab-status b { color: var(--primary-strong); }
+
+    .lab-note {
+      margin-top: 14px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .field-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--ink);
+      font-weight: 950;
+      letter-spacing: -0.02em;
+    }
+
+    .summary-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .summary-item {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      background: #fff;
+      padding: 14px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .summary-item h3 {
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      letter-spacing: -0.02em;
+    }
+
+    .summary-item p {
+      color: var(--muted);
+      line-height: 1.6;
+      word-break: keep-all;
+      overflow-wrap: normal;
+      text-wrap: pretty;
+    }
+
+    .compare-write {
+      margin-top: 14px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .side-card {
+      position: sticky;
+      top: 18px;
+    }
+
+    .side-section + .side-section {
+      margin-top: 18px;
+      padding-top: 18px;
+      border-top: 1px solid var(--line);
+    }
+
+    .side-kicker {
+      color: var(--primary-strong);
+      font-size: 13px;
+      font-weight: 950;
+      margin-bottom: 8px;
+      white-space: nowrap;
+    }
+
+    .focus-list {
+      display: grid;
+      gap: 9px;
+      list-style: none;
+      color: var(--muted);
+      line-height: 1.5;
+      font-size: 14.5px;
+    }
+
+    .focus-list li {
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+    }
+
+    .teacher-question,
+    .answer-box {
+      border-radius: var(--radius-md);
+      padding: 14px;
+      line-height: 1.55;
+      word-break: keep-all;
+      overflow-wrap: normal;
+      text-wrap: pretty;
+    }
+
+    .teacher-question {
+      background: var(--violet-soft);
+      color: #4c1d95;
+      border: 1px solid #ddd6fe;
+      font-weight: 850;
+    }
+
+    .answer-box {
+      background: var(--green-soft);
+      color: #14532d;
+      border: 1px solid #bbf7d0;
+      font-weight: 800;
+    }
+
+    .hint-box {
+      border-radius: var(--radius-md);
+      padding: 14px;
+      background: #f8fbff;
+      border: 1px solid var(--line);
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 14.5px;
+    }
+
+    .report-box {
+      display: none;
+      margin-top: 14px;
+      border-radius: var(--radius-md);
+      padding: 14px;
+      background: #f8fbff;
+      border: 1px solid var(--line);
+      white-space: pre-wrap;
+      line-height: 1.6;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .student-locked .lock-message { display: block; }
+    .lock-message {
+      display: none;
+      margin-top: 12px;
+      color: var(--violet);
+      font-weight: 950;
+    }
+
+    [hidden] { display: none !important; }
+
+    @media (max-width: 1040px) {
+      .hero,
+      .main-grid { grid-template-columns: 1fr; }
+      .side-card { position: static; }
+      .teacher-grid { grid-template-columns: repeat(2, minmax(150px, 1fr)); }
+    }
+
+    @media (max-width: 760px) {
+      .app-shell { width: min(100% - 22px, 1240px); padding-top: 18px; }
+      .topbar { align-items: flex-start; flex-direction: column; }
+      .stepper { grid-template-columns: 1fr; }
+      .experiment-tabs { grid-template-columns: 1fr; }
+      .prediction-card { grid-template-columns: 1fr; }
+      .condition-grid { grid-template-columns: 1fr; }
+      .condition-btn { align-items: stretch; }
+      .screen-title { flex-direction: column; }
+      .canvas-frame { min-height: 320px; aspect-ratio: 4 / 3; }
+      .teacher-grid { grid-template-columns: 1fr; }
+      .teacher-actions { flex-direction: column; }
+      .teacher-actions .mini-btn,
+      .screen-actions .primary-btn,
+      .screen-actions .ghost-btn,
+      .screen-actions .danger-btn { width: 100%; }
+      h1 { font-size: 34px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell" id="appShell">
+    <header class="topbar">
+      <div class="brand-mini"><span class="lab-mark">🧪</span><span>서해고 통합과학 가상실험실</span></div>
+      <button class="teacher-open-btn" id="teacherOpenBtn" type="button">🔐 <span>선생님모드</span></button>
+    </header>
+
+    <section class="hero" aria-label="앱 소개">
+      <div class="hero-card">
+        <div class="eyebrow">고등학교 1학년 · 통합과학 · 삼투</div>
+        <h1><span class="gradient-text">예상하고, 관찰하고, 비교하는</span> 삼투 가상실험실</h1>
+        <p class="hero-description">실험 전 예상부터 작성한 뒤, 가상 실험실에서 상추와 적혈구의 변화를 관찰합니다. 마지막에는 내가 쓴 예상과 실제 관찰 결과를 비교해 물의 이동 방향을 정리합니다.</p>
+        <div class="hero-tags">
+          <span class="tag">💧 물 분자 이동</span>
+          <span class="tag">🥬 상추 관찰</span>
+          <span class="tag">🔴 적혈구 관찰</span>
+          <span class="tag">📝 예상-관찰 비교</span>
+        </div>
+      </div>
+      <aside class="goal-card">
+        <h2>수업 목표</h2>
+        <ul class="goal-list">
+          <li><span>①</span><span><b>실험 조건</b>에 따라 세포의 모양이 어떻게 달라지는지 예상한다.</span></li>
+          <li><span>②</span><span>물이 <b>안팎으로 모두 이동</b>하지만 어느 방향으로 더 많이 이동하는지 관찰한다.</span></li>
+          <li><span>③</span><span>예상과 관찰 결과를 비교해 <b>삼투 현상</b>을 설명한다.</span></li>
+        </ul>
+      </aside>
+    </section>
+
+    <section class="teacher-panel" id="teacherPanel" hidden>
+      <div class="teacher-inner">
+        <div class="teacher-title-row">
+          <div>
+            <h2>선생님모드</h2>
+            <p style="color: var(--muted); margin-top: 6px; line-height: 1.5;">수업 진행 중 화면 표시, 발문, 자동 시연을 조절합니다.</p>
+          </div>
+          <button class="mini-btn" id="teacherCloseBtn" type="button">닫기</button>
+        </div>
+
+        <div class="teacher-login" id="teacherLogin">
+          <strong class="nowrap">접속 코드</strong>
+          <input id="teacherCode" type="password" inputmode="numeric" placeholder="코드 입력" autocomplete="off" />
+          <button class="primary-btn" id="teacherUnlockBtn" type="button">열기</button>
+          <span id="teacherLoginMsg" style="color: var(--muted); font-weight: 850;">접속 코드를 입력하세요.</span>
+        </div>
+
+        <div id="teacherUnlocked" hidden>
+          <div class="teacher-grid">
+            <label class="teacher-control"><input type="checkbox" id="toggleParticles" checked /><span>물 분자 표시</span></label>
+            <label class="teacher-control"><input type="checkbox" id="toggleArrows" checked /><span>순이동 화살표</span></label>
+            <label class="teacher-control"><input type="checkbox" id="toggleLabels" checked /><span>관찰 라벨 표시</span></label>
+            <label class="teacher-control"><input type="checkbox" id="toggleLock" /><span>학생 조작 잠금</span></label>
+          </div>
+
+          <div class="teacher-speed">
+            <span class="nowrap">애니메이션 속도</span>
+            <input type="range" id="speedRange" min="0.6" max="2" value="1" step="0.1" />
+            <strong id="speedLabel" class="nowrap">1.0배</strong>
+          </div>
+
+          <div class="teacher-actions">
+            <button class="mini-btn" data-prompt="prediction" type="button">예상 발문</button>
+            <button class="mini-btn" data-prompt="observe" type="button">관찰 발문</button>
+            <button class="mini-btn" data-prompt="compare" type="button">비교 발문</button>
+            <button class="mini-btn" data-prompt="quiz" type="button">형성평가</button>
+            <button class="mini-btn" id="toggleAnswerBtn" type="button">정답 예시 표시</button>
+            <button class="primary-btn" id="autoDemoBtn" type="button">자동 시연</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="teacher-banner" id="teacherBanner">
+      <span>🔐 선생님모드가 켜져 있습니다.</span>
+      <span id="teacherBannerDetail" class="nowrap">화살표 · 물 분자 표시 중</span>
+    </div>
+
+    <nav class="stepper" aria-label="활동 단계">
+      <div class="step-item active" data-step="prediction"><span class="step-number">1</span><span class="step-label">실험 전 예상</span></div>
+      <div class="step-item" data-step="lab"><span class="step-number">2</span><span class="step-label">가상 실험 관찰</span></div>
+      <div class="step-item" data-step="compare"><span class="step-number">3</span><span class="step-label">예상과 관찰 비교</span></div>
+    </nav>
+
+    <main class="main-grid">
+      <section class="panel" aria-label="활동 영역">
+        <div class="panel-body">
+          <section id="predictionStage" class="stage-screen">
+            <div class="screen-title">
+              <div>
+                <h2>1단계. 실험 전 예상 작성</h2>
+                <p>먼저 실험 대상을 고르고, 각 조건에서 어떤 변화가 생길지 자신의 생각을 적어보세요.</p>
+              </div>
+            </div>
+
+            <div class="experiment-tabs" id="experimentTabs">
+              <button class="tab-btn active student-control lockable" data-experiment="lettuce" type="button">🥬 <span>상추 실험</span></button>
+              <button class="tab-btn student-control lockable" data-experiment="rbc" type="button">🔴 <span>적혈구 실험</span></button>
+            </div>
+
+            <div class="activity-note">
+              <span>🧭</span>
+              <span><strong>활동 순서:</strong> 예상 작성 → 가상 실험실 이동 → 조건 선택 후 관찰 → 예상과 관찰 비교</span>
+            </div>
+
+            <div class="prediction-grid" id="predictionFields"></div>
+
+            <div class="screen-actions">
+              <button class="primary-btn student-control lockable" id="goLabBtn" type="button">예상 저장하고 실험실로 이동</button>
+            </div>
+            <p class="lock-message">학생 조작 잠금 중입니다. 선생님모드에서 잠금을 해제하면 입력할 수 있습니다.</p>
+          </section>
+
+          <section id="labStage" class="stage-screen" hidden>
+            <div class="screen-title">
+              <div>
+                <h2 id="labTitle">2단계. 가상 실험 관찰</h2>
+                <p id="labSubtitle">조건을 선택하고 모양 변화와 물의 이동 방향을 관찰하세요.</p>
+              </div>
+              <button class="ghost-btn student-control lockable" id="backPredictionBtn" type="button">예상 수정</button>
+            </div>
+
+            <div class="canvas-toolbar">
+              <span class="lab-badge" id="labBadge">🥬 상추 실험</span>
+              <div style="display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end;">
+                <button class="mini-btn student-control lockable" id="viewToggleBtn" type="button">현미경 보기</button>
+                <button class="mini-btn student-control lockable" id="resetViewBtn" type="button">처음 상태</button>
+              </div>
+            </div>
+
+            <div class="canvas-card">
+              <div class="canvas-frame">
+                <canvas id="labCanvas" aria-label="삼투 실험 관찰 화면"></canvas>
+              </div>
+            </div>
+
+            <div class="condition-grid" id="conditionButtons"></div>
+            <div class="lab-status" id="labStatus">조건을 선택하면 물 분자의 움직임과 세포의 변화를 볼 수 있습니다.</div>
+
+            <label class="lab-note">
+              <span class="field-label">📝 관찰 기록</span>
+              <textarea class="student-control lockable" id="observationText" placeholder="예: 진한 소금물에서는 상추가 더 축 처졌고, 물이 상추 밖으로 더 많이 이동하는 것처럼 보였다."></textarea>
+            </label>
+
+            <div class="screen-actions">
+              <button class="ghost-btn student-control lockable" id="clearObservationBtn" type="button">관찰 기록 지우기</button>
+              <button class="primary-btn student-control lockable" id="goCompareBtn" type="button">예상과 관찰 비교하기</button>
+            </div>
+            <p class="lock-message">학생 조작 잠금 중입니다. 선생님모드에서 잠금을 해제하면 조작할 수 있습니다.</p>
+          </section>
+
+          <section id="compareStage" class="stage-screen" hidden>
+            <div class="screen-title">
+              <div>
+                <h2>3단계. 예상과 관찰 비교</h2>
+                <p>처음 예상과 실제 관찰 결과가 같았는지 비교하고, 물의 순이동 방향을 이용해 설명해봅시다.</p>
+              </div>
+              <button class="ghost-btn student-control lockable" id="backLabBtn" type="button">관찰로 돌아가기</button>
+            </div>
+
+            <div class="summary-list" id="compareSummary"></div>
+
+            <label class="compare-write">
+              <span class="field-label">🔎 최종 정리</span>
+              <textarea class="student-control lockable" id="compareText" placeholder="예상과 맞았던 점, 달랐던 점, 물이 더 많이 이동한 방향을 함께 써보세요."></textarea>
+            </label>
+
+            <div class="report-box" id="reportBox"></div>
+
+            <div class="screen-actions">
+              <button class="ghost-btn student-control lockable" id="copyReportBtn" type="button">보고서 내용 만들기</button>
+              <button class="danger-btn student-control lockable" id="restartBtn" type="button">다른 실험 다시 하기</button>
+            </div>
+            <p class="lock-message">학생 조작 잠금 중입니다. 선생님모드에서 잠금을 해제하면 입력할 수 있습니다.</p>
+          </section>
+        </div>
+      </section>
+
+      <aside class="side-card" aria-label="수업 안내">
+        <div class="side-body">
+          <section class="side-section">
+            <div class="side-kicker" id="sideExperimentLabel">현재 활동: 상추 실험</div>
+            <h2>관찰 포인트</h2>
+            <ul class="focus-list" id="focusList"></ul>
+          </section>
+
+          <section class="side-section">
+            <div class="side-kicker">핵심 생각</div>
+            <div class="hint-box" id="conceptHint">물은 세포 안과 밖을 모두 오가지만, 조건에 따라 한쪽 방향으로 더 많이 이동할 수 있습니다.</div>
+          </section>
+
+          <section class="side-section">
+            <div class="side-kicker">선생님 발문</div>
+            <div class="teacher-question" id="teacherQuestion">실험 전에 “어떤 조건에서 모양이 더 크게 변할까?”를 먼저 예상하게 해보세요.</div>
+          </section>
+
+          <section class="side-section" id="answerSection" hidden>
+            <div class="side-kicker">정답 예시</div>
+            <div class="answer-box" id="answerBox"></div>
+          </section>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <script>
+    const experiments = {
+      lettuce: {
+        icon: '🥬',
+        name: '상추 실험',
+        labTitle: '2단계. 상추 삼투 가상실험',
+        labSubtitle: '상추를 서로 다른 물에 넣었을 때 잎 모양과 물의 이동 방향을 관찰하세요.',
+        defaultStatus: '조건을 선택하면 상추의 모양 변화와 물 분자의 순이동 방향을 볼 수 있습니다.',
+        focus: [
+          '상추 잎이 펴지는지, 더 축 처지는지 관찰한다.',
+          '물 분자가 양방향으로 움직이는지 확인한다.',
+          '어느 방향으로 더 많이 이동하는지 화살표로 확인한다.'
+        ],
+        hint: '상추 주변에 녹아 있는 물질이 적으면 물이 상추 쪽으로 더 많이 이동하고, 많으면 상추 밖으로 더 많이 이동할 수 있습니다.',
+        answer: '예시: 증류수에서는 물이 상추 안쪽으로 더 많이 이동해 상추가 더 싱싱해 보입니다. 진한 소금물에서는 물이 상추 밖으로 더 많이 이동해 상추가 더 축 처지고 쪼그라듭니다.',
+        prompts: {
+          prediction: '상추가 싱싱해지려면 물이 어느 방향으로 더 많이 이동해야 할까요?',
+          observe: '상추 잎의 넓이, 색, 처진 정도가 어떻게 달라졌나요?',
+          compare: '처음 예상과 실제 관찰이 달랐다면, 물의 이동 방향을 기준으로 다시 설명해볼까요?',
+          quiz: '형성평가: 진한 소금물에 상추를 넣었을 때 물은 어느 방향으로 더 많이 이동하나요?'
+        },
+        conditions: [
+          {
+            id: 'lettuceWater',
+            icon: '💧',
+            label: '증류수',
+            sub: '주변에 녹은 물질이 적음',
+            predictionPrompt: '증류수에 담그면 상추는 어떻게 변할까?',
+            net: 'in',
+            target: { lettuceHealth: 1.08, rbcSize: 1, rbcSpikes: 0, rbcBurst: 0 },
+            status: '증류수에서는 물이 상추 안쪽으로 더 많이 이동합니다. 상추 잎이 펴지고 더 싱싱해 보입니다.',
+            result: '상추 잎이 펴지고 더 싱싱해 보임'
+          },
+          {
+            id: 'lettuceSalt',
+            icon: '🧂',
+            label: '진한 소금물',
+            sub: '주변에 녹은 물질이 많음',
+            predictionPrompt: '진한 소금물에 담그면 상추는 어떻게 변할까?',
+            net: 'out',
+            target: { lettuceHealth: 0.05, rbcSize: 1, rbcSpikes: 0, rbcBurst: 0 },
+            status: '진한 소금물에서는 물이 상추 바깥쪽으로 더 많이 이동합니다. 상추가 축 처지고 쪼그라듭니다.',
+            result: '상추가 더 축 처지고 쪼그라듦'
+          }
+        ]
+      },
+      rbc: {
+        icon: '🔴',
+        name: '적혈구 실험',
+        labTitle: '2단계. 적혈구 삼투 가상실험',
+        labSubtitle: '적혈구 주변의 물이 달라질 때 적혈구의 크기와 모양을 관찰하세요.',
+        defaultStatus: '조건을 선택하면 적혈구의 모양 변화와 물 분자의 순이동 방향을 볼 수 있습니다.',
+        focus: [
+          '적혈구가 커지는지, 유지되는지, 작아지는지 관찰한다.',
+          '물 분자의 안팎 이동이 같은지, 한쪽이 더 많은지 확인한다.',
+          '적혈구가 터질 수 있는 조건을 찾아본다.'
+        ],
+        hint: '적혈구도 물이 안팎으로 이동합니다. 주변 조건에 따라 물이 적혈구 안으로 더 많이 들어가거나 밖으로 더 많이 나갈 수 있습니다.',
+        answer: '예시: 증류수에서는 물이 적혈구 안으로 더 많이 이동해 적혈구가 커지다가 터질 수 있습니다. 몸속과 비슷한 소금물에서는 모양이 거의 유지됩니다. 진한 소금물에서는 물이 적혈구 밖으로 더 많이 이동해 적혈구가 작아지고 쭈글쭈글해집니다.',
+        prompts: {
+          prediction: '적혈구가 터질 수 있다면, 물은 적혈구 안과 밖 중 어느 쪽으로 더 많이 이동해야 할까요?',
+          observe: '적혈구의 크기와 가장자리 모양이 어떻게 달라졌나요?',
+          compare: '상추 실험과 적혈구 실험에서 공통으로 나타난 물의 이동 규칙은 무엇인가요?',
+          quiz: '형성평가: 진한 소금물에 적혈구를 넣으면 물은 어느 방향으로 더 많이 이동하나요?'
+        },
+        conditions: [
+          {
+            id: 'rbcWater',
+            icon: '💧',
+            label: '증류수',
+            sub: '주변에 녹은 물질이 적음',
+            predictionPrompt: '증류수에 넣으면 적혈구는 어떻게 변할까?',
+            net: 'in',
+            target: { lettuceHealth: 0.5, rbcSize: 1.45, rbcSpikes: 0, rbcBurst: 1 },
+            status: '증류수에서는 물이 적혈구 안쪽으로 더 많이 이동합니다. 적혈구가 커지다가 터질 수 있습니다.',
+            result: '적혈구가 커지다가 터질 수 있음'
+          },
+          {
+            id: 'rbcBody',
+            icon: '🧪',
+            label: '비슷한 소금물',
+            sub: '세포 안팎 조건이 비슷함',
+            predictionPrompt: '몸속과 비슷한 소금물에 넣으면 적혈구는 어떻게 변할까?',
+            net: 'balanced',
+            target: { lettuceHealth: 0.5, rbcSize: 1, rbcSpikes: 0, rbcBurst: 0 },
+            status: '몸속과 비슷한 소금물에서는 안팎으로 이동하는 물의 양이 비슷합니다. 적혈구가 원래 모양을 유지합니다.',
+            result: '적혈구가 원래 모양을 거의 유지함'
+          },
+          {
+            id: 'rbcSalt',
+            icon: '🧂',
+            label: '진한 소금물',
+            sub: '주변에 녹은 물질이 많음',
+            predictionPrompt: '진한 소금물에 넣으면 적혈구는 어떻게 변할까?',
+            net: 'out',
+            target: { lettuceHealth: 0.5, rbcSize: 0.72, rbcSpikes: 1, rbcBurst: 0 },
+            status: '진한 소금물에서는 물이 적혈구 바깥쪽으로 더 많이 이동합니다. 적혈구가 작아지고 가장자리가 쭈글쭈글해집니다.',
+            result: '적혈구가 작아지고 가장자리가 쭈글쭈글해짐'
+          }
+        ]
+      }
+    };
+
+    const state = {
+      stage: 'prediction',
+      experiment: 'lettuce',
+      lettuceView: 'whole',
+      conditionId: null,
+      predictions: {},
+      observations: { lettuce: '', rbc: '' },
+      comparisons: { lettuce: '', rbc: '' },
+      observed: { lettuce: new Set(), rbc: new Set() },
+      visual: { lettuceHealth: 0.45, rbcSize: 1, rbcSpikes: 0, rbcBurst: 0 },
+      target: { lettuceHealth: 0.45, rbcSize: 1, rbcSpikes: 0, rbcBurst: 0 },
+      particles: [],
+      frame: 0,
+      demoTimer: null
+    };
+
+    const teacher = {
+      active: false,
+      showParticles: true,
+      showArrows: true,
+      showLabels: true,
+      locked: false,
+      showAnswer: false,
+      speed: 1
+    };
+
+    const $ = (selector) => document.querySelector(selector);
+    const $$ = (selector) => Array.from(document.querySelectorAll(selector));
+
+    const appShell = $('#appShell');
+    const teacherOpenBtn = $('#teacherOpenBtn');
+    const teacherPanel = $('#teacherPanel');
+    const teacherCloseBtn = $('#teacherCloseBtn');
+    const teacherCode = $('#teacherCode');
+    const teacherUnlockBtn = $('#teacherUnlockBtn');
+    const teacherLogin = $('#teacherLogin');
+    const teacherUnlocked = $('#teacherUnlocked');
+    const teacherLoginMsg = $('#teacherLoginMsg');
+    const teacherBanner = $('#teacherBanner');
+    const teacherBannerDetail = $('#teacherBannerDetail');
+    const toggleParticles = $('#toggleParticles');
+    const toggleArrows = $('#toggleArrows');
+    const toggleLabels = $('#toggleLabels');
+    const toggleLock = $('#toggleLock');
+    const speedRange = $('#speedRange');
+    const speedLabel = $('#speedLabel');
+    const toggleAnswerBtn = $('#toggleAnswerBtn');
+    const autoDemoBtn = $('#autoDemoBtn');
+
+    const predictionStage = $('#predictionStage');
+    const labStage = $('#labStage');
+    const compareStage = $('#compareStage');
+    const predictionFields = $('#predictionFields');
+    const conditionButtons = $('#conditionButtons');
+    const labTitle = $('#labTitle');
+    const labSubtitle = $('#labSubtitle');
+    const labBadge = $('#labBadge');
+    const labStatus = $('#labStatus');
+    const observationText = $('#observationText');
+    const compareText = $('#compareText');
+    const compareSummary = $('#compareSummary');
+    const reportBox = $('#reportBox');
+    const viewToggleBtn = $('#viewToggleBtn');
+    const sideExperimentLabel = $('#sideExperimentLabel');
+    const focusList = $('#focusList');
+    const conceptHint = $('#conceptHint');
+    const teacherQuestion = $('#teacherQuestion');
+    const answerSection = $('#answerSection');
+    const answerBox = $('#answerBox');
+
+    const canvas = $('#labCanvas');
+    const ctx = canvas.getContext('2d');
+    let canvasW = 900;
+    let canvasH = 560;
+
+    function getExperiment() {
+      return experiments[state.experiment];
+    }
+
+    function getCondition(id = state.conditionId) {
+      return getExperiment().conditions.find((condition) => condition.id === id) || null;
+    }
+
+    function saveCurrentTextareas() {
+      $$('#predictionFields textarea[data-condition]').forEach((textarea) => {
+        state.predictions[textarea.dataset.condition] = textarea.value;
+      });
+      if (observationText) state.observations[state.experiment] = observationText.value;
+      if (compareText) state.comparisons[state.experiment] = compareText.value;
+    }
+
+    function setExperiment(nextExperiment) {
+      saveCurrentTextareas();
+      state.experiment = nextExperiment;
+      state.conditionId = null;
+      state.particles = [];
+      state.lettuceView = 'whole';
+      resetTargetToStart();
+      updateUI();
+      resizeCanvas();
+    }
+
+    function resetTargetToStart() {
+      if (state.experiment === 'lettuce') {
+        state.target = { lettuceHealth: 0.45, rbcSize: 1, rbcSpikes: 0, rbcBurst: 0 };
+      } else {
+        state.target = { lettuceHealth: 0.45, rbcSize: 1, rbcSpikes: 0, rbcBurst: 0 };
+      }
+      state.visual.rbcBurst = Math.min(state.visual.rbcBurst, 0.2);
+    }
+
+    function goStage(stage) {
+      saveCurrentTextareas();
+      state.stage = stage;
+      predictionStage.hidden = stage !== 'prediction';
+      labStage.hidden = stage !== 'lab';
+      compareStage.hidden = stage !== 'compare';
+      $$('.step-item').forEach((item) => {
+        const itemStage = item.dataset.step;
+        item.classList.toggle('active', itemStage === stage);
+        item.classList.toggle('done', ['prediction', 'lab', 'compare'].indexOf(itemStage) < ['prediction', 'lab', 'compare'].indexOf(stage));
+      });
+      if (stage === 'lab') {
+        observationText.value = state.observations[state.experiment] || '';
+        labStatus.innerHTML = getExperiment().defaultStatus;
+        renderConditionButtons();
+        setTimeout(resizeCanvas, 30);
+      }
+      if (stage === 'compare') {
+        compareText.value = state.comparisons[state.experiment] || '';
+        renderCompareSummary();
+      }
+      updateLockState();
+    }
+
+    function renderPredictionFields() {
+      const experiment = getExperiment();
+      predictionFields.innerHTML = experiment.conditions.map((condition) => `
+        <label class="prediction-card">
+          <span class="condition-mini">
+            <span class="condition-title"><span>${condition.icon}</span><span class="label">${condition.label}</span></span>
+            <span class="condition-sub">${condition.predictionPrompt} · ${condition.sub}</span>
+          </span>
+          <textarea class="student-control lockable" data-condition="${condition.id}" placeholder="내 예상 쓰기: 모양 변화와 물의 이동 방향을 함께 생각해보세요.">${state.predictions[condition.id] || ''}</textarea>
+        </label>
+      `).join('');
+      $$('#predictionFields textarea[data-condition]').forEach((textarea) => {
+        textarea.addEventListener('input', () => {
+          state.predictions[textarea.dataset.condition] = textarea.value;
+        });
+      });
+    }
+
+    function renderConditionButtons() {
+      const experiment = getExperiment();
+      const isNarrow = window.matchMedia('(max-width: 760px)').matches;
+      const gridClass = isNarrow
+        ? '1fr'
+        : experiment.conditions.length === 2
+          ? 'repeat(2, minmax(220px, 1fr))'
+          : 'repeat(3, minmax(190px, 1fr))';
+      conditionButtons.style.gridTemplateColumns = gridClass;
+      conditionButtons.innerHTML = experiment.conditions.map((condition) => `
+        <button class="condition-btn student-control lockable ${state.conditionId === condition.id ? 'active' : ''}" data-condition="${condition.id}" type="button">
+          <strong><span>${condition.icon}</span><span>${condition.label}</span></strong>
+          <span>${condition.sub}</span>
+        </button>
+      `).join('');
+      $$('#conditionButtons .condition-btn').forEach((button) => {
+        button.addEventListener('click', () => applyCondition(button.dataset.condition));
+      });
+      updateLockState();
+    }
+
+    function renderSide() {
+      const experiment = getExperiment();
+      sideExperimentLabel.textContent = `현재 활동: ${experiment.name}`;
+      focusList.innerHTML = experiment.focus.map((item) => `<li><span>•</span><span>${item}</span></li>`).join('');
+      conceptHint.textContent = experiment.hint;
+      answerBox.textContent = experiment.answer;
+      answerSection.hidden = !teacher.showAnswer;
+    }
+
+    function updateUI() {
+      const experiment = getExperiment();
+      $$('#experimentTabs .tab-btn').forEach((button) => {
+        button.classList.toggle('active', button.dataset.experiment === state.experiment);
+      });
+      labTitle.textContent = experiment.labTitle;
+      labSubtitle.textContent = experiment.labSubtitle;
+      labBadge.textContent = `${experiment.icon} ${experiment.name}`;
+      viewToggleBtn.hidden = state.experiment !== 'lettuce';
+      viewToggleBtn.textContent = state.lettuceView === 'whole' ? '현미경 보기' : '전체 상추 보기';
+      observationText.placeholder = state.experiment === 'lettuce'
+        ? '예: 증류수에서는 상추가 더 펴졌고, 진한 소금물에서는 상추가 축 처졌다.'
+        : '예: 증류수에서는 적혈구가 커졌고, 진한 소금물에서는 작아지며 가장자리가 쭈글쭈글해졌다.';
+      renderPredictionFields();
+      renderConditionButtons();
+      renderSide();
+      updateTeacherBanner();
+      updateLockState();
+    }
+
+    function validatePrediction() {
+      saveCurrentTextareas();
+      const missing = getExperiment().conditions.filter((condition) => !(state.predictions[condition.id] || '').trim());
+      if (missing.length > 0) {
+        teacherQuestion.textContent = '예상을 먼저 간단히 작성해보세요. 정답이 아니어도 괜찮습니다.';
+        const first = $(`#predictionFields textarea[data-condition="${missing[0].id}"]`);
+        if (first) first.focus();
+        return false;
+      }
+      return true;
+    }
+
+    function applyCondition(conditionId) {
+      if (teacher.locked) return;
+      const condition = getExperiment().conditions.find((item) => item.id === conditionId);
+      if (!condition) return;
+      state.conditionId = condition.id;
+      state.target = { ...state.target, ...condition.target };
+      state.observed[state.experiment].add(condition.id);
+      state.particles = [];
+      labStatus.innerHTML = `<b>${condition.label}</b>: ${condition.status}`;
+      renderConditionButtons();
+    }
+
+    function renderCompareSummary() {
+      const experiment = getExperiment();
+      const observedLabels = Array.from(state.observed[state.experiment]).map((id) => {
+        const condition = experiment.conditions.find((item) => item.id === id);
+        return condition ? `${condition.icon} ${condition.label}` : '';
+      }).filter(Boolean);
+      compareSummary.innerHTML = experiment.conditions.map((condition) => {
+        const prediction = (state.predictions[condition.id] || '아직 작성하지 않음').trim();
+        const observed = state.observed[state.experiment].has(condition.id) ? condition.result : '아직 이 조건을 관찰하지 않음';
+        return `
+          <article class="summary-item">
+            <h3><span>${condition.icon}</span><span>${condition.label}</span></h3>
+            <p><strong>내 예상:</strong> ${escapeHTML(prediction)}</p>
+            <p><strong>관찰 결과:</strong> ${escapeHTML(observed)}</p>
+          </article>
+        `;
+      }).join('') + `
+        <article class="summary-item">
+          <h3><span>📝</span><span>관찰 기록</span></h3>
+          <p>${escapeHTML(state.observations[state.experiment] || '관찰 기록이 비어 있음')}</p>
+          <p><strong>관찰한 조건:</strong> ${observedLabels.length ? observedLabels.join(', ') : '없음'}</p>
+        </article>
+      `;
+    }
+
+    function escapeHTML(text) {
+      return String(text)
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#039;');
+    }
+
+    function makeReport() {
+      saveCurrentTextareas();
+      const experiment = getExperiment();
+      const lines = [];
+      lines.push(`[${experiment.name} 보고서]`);
+      lines.push('');
+      experiment.conditions.forEach((condition) => {
+        lines.push(`- ${condition.label}`);
+        lines.push(`  예상: ${(state.predictions[condition.id] || '').trim() || '미작성'}`);
+        lines.push(`  관찰: ${state.observed[state.experiment].has(condition.id) ? condition.result : '관찰하지 않음'}`);
+      });
+      lines.push('');
+      lines.push(`관찰 기록: ${(state.observations[state.experiment] || '').trim() || '미작성'}`);
+      lines.push(`최종 정리: ${(state.comparisons[state.experiment] || '').trim() || '미작성'}`);
+      reportBox.style.display = 'block';
+      reportBox.textContent = lines.join('\n');
+    }
+
+    function updateTeacherBanner() {
+      appShell.classList.toggle('teacher-active', teacher.active);
+      teacherBanner.hidden = !teacher.active;
+      teacherBannerDetail.textContent = `${teacher.showArrows ? '화살표 켬' : '화살표 끔'} · ${teacher.showParticles ? '물 분자 켬' : '물 분자 끔'} · ${teacher.locked ? '학생 잠금' : '학생 조작 가능'}`;
+    }
+
+    function updateLockState() {
+      document.body.classList.toggle('student-locked', teacher.locked);
+      $$('.lockable').forEach((element) => {
+        element.disabled = teacher.locked;
+      });
+    }
+
+    function setTeacherPrompt(type) {
+      const experiment = getExperiment();
+      teacherQuestion.textContent = experiment.prompts[type] || experiment.prompts.prediction;
+    }
+
+    function startAutoDemo() {
+      clearTimeout(state.demoTimer);
+      if (state.stage !== 'lab') goStage('lab');
+      teacher.locked = false;
+      toggleLock.checked = false;
+      updateLockState();
+      const sequence = getExperiment().conditions.map((condition) => condition.id);
+      let index = 0;
+      function run() {
+        applyCondition(sequence[index]);
+        index += 1;
+        if (index < sequence.length) {
+          state.demoTimer = setTimeout(run, 3600 / teacher.speed);
+        }
+      }
+      run();
+    }
+
+    function resizeCanvas() {
+      const frame = canvas.parentElement;
+      const rect = frame.getBoundingClientRect();
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvasW = Math.max(600, rect.width || 900);
+      canvasH = Math.max(360, rect.height || 560);
+      canvas.width = Math.round(canvasW * dpr);
+      canvas.height = Math.round(canvasH * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      drawScene();
+    }
+
+    function animate() {
+      state.frame += 1;
+      const k = 0.018 * teacher.speed;
+      state.visual.lettuceHealth += (state.target.lettuceHealth - state.visual.lettuceHealth) * k;
+      state.visual.rbcSize += (state.target.rbcSize - state.visual.rbcSize) * k;
+      state.visual.rbcSpikes += (state.target.rbcSpikes - state.visual.rbcSpikes) * k;
+      state.visual.rbcBurst += (state.target.rbcBurst - state.visual.rbcBurst) * (0.012 * teacher.speed);
+
+      if (teacher.showParticles && state.conditionId && state.stage === 'lab') {
+        spawnParticlesForCondition();
+      }
+      updateParticles();
+      drawScene();
+      requestAnimationFrame(animate);
+    }
+
+    function currentNet() {
+      const condition = getCondition();
+      return condition ? condition.net : 'none';
+    }
+
+    function spawnParticlesForCondition() {
+      const condition = getCondition();
+      if (!condition) return;
+      const interval = Math.max(2, Math.round(7 / teacher.speed));
+      if (state.frame % interval !== 0) return;
+      const net = condition.net;
+      if (net === 'in') {
+        spawnWaterParticle('in');
+        spawnWaterParticle('in');
+        if (Math.random() < 0.35) spawnWaterParticle('out');
+      } else if (net === 'out') {
+        spawnWaterParticle('out');
+        spawnWaterParticle('out');
+        if (Math.random() < 0.35) spawnWaterParticle('in');
+      } else if (net === 'balanced') {
+        spawnWaterParticle('in');
+        spawnWaterParticle('out');
+      }
+    }
+
+    function subjectGeometry() {
+      const cx = canvasW / 2;
+      const cy = canvasH / 2 + 18;
+      if (state.experiment === 'lettuce') {
+        if (state.lettuceView === 'cell') {
+          return { cx, cy, innerR: 72, outerR: Math.min(canvasW, canvasH) * 0.38 };
+        }
+        return { cx, cy: canvasH / 2 + 28, innerR: 90, outerR: Math.min(canvasW, canvasH) * 0.42 };
+      }
+      return { cx, cy, innerR: 76 * Math.max(0.85, state.visual.rbcSize), outerR: Math.min(canvasW, canvasH) * 0.40 };
+    }
+
+    function pointAround(cx, cy, radiusMin, radiusMax) {
+      const angle = Math.random() * Math.PI * 2;
+      const radius = radiusMin + Math.random() * (radiusMax - radiusMin);
+      return { x: cx + Math.cos(angle) * radius, y: cy + Math.sin(angle) * radius };
+    }
+
+    function spawnWaterParticle(direction) {
+      const geo = subjectGeometry();
+      const angle = Math.random() * Math.PI * 2;
+      const insideRadius = Math.random() * Math.max(22, geo.innerR * 0.55);
+      const outsideRadius = geo.innerR + 92 + Math.random() * Math.max(40, geo.outerR - geo.innerR + 34);
+      const inside = {
+        x: geo.cx + Math.cos(angle) * insideRadius,
+        y: geo.cy + Math.sin(angle) * insideRadius
+      };
+      const outside = {
+        x: geo.cx + Math.cos(angle) * outsideRadius,
+        y: geo.cy + Math.sin(angle) * outsideRadius
+      };
+      const start = direction === 'in' ? outside : inside;
+      const end = direction === 'in' ? inside : outside;
+      state.particles.push({
+        x: start.x,
+        y: start.y,
+        sx: start.x,
+        sy: start.y,
+        tx: end.x,
+        ty: end.y,
+        life: 0,
+        maxLife: 80 + Math.random() * 35,
+        direction,
+        jitter: Math.random() * Math.PI * 2
+      });
+      if (state.particles.length > 150) state.particles.splice(0, state.particles.length - 150);
+    }
+
+    function updateParticles() {
+      state.particles.forEach((particle) => {
+        particle.life += 1.4 * teacher.speed;
+        const t = Math.min(1, particle.life / particle.maxLife);
+        const ease = t * t * (3 - 2 * t);
+        const wiggle = Math.sin(t * Math.PI * 2 + particle.jitter) * 10 * (1 - t);
+        const dx = particle.tx - particle.sx;
+        const dy = particle.ty - particle.sy;
+        const len = Math.hypot(dx, dy) || 1;
+        const nx = -dy / len;
+        const ny = dx / len;
+        particle.x = particle.sx + dx * ease + nx * wiggle;
+        particle.y = particle.sy + dy * ease + ny * wiggle;
+      });
+      state.particles = state.particles.filter((particle) => particle.life < particle.maxLife);
+    }
+
+    function drawScene() {
+      ctx.clearRect(0, 0, canvasW, canvasH);
+      drawCleanBackground();
+      if (state.experiment === 'lettuce') {
+        if (state.lettuceView === 'cell') drawLettuceCell();
+        else drawLettuceWhole();
+      } else {
+        drawRbcScene();
+      }
+      if (teacher.showParticles) drawWaterParticles();
+      if (teacher.showArrows) drawNetArrows(currentNet());
+      if (teacher.showLabels) drawCanvasLabels();
+    }
+
+    function drawCleanBackground() {
+      const gradient = ctx.createLinearGradient(0, 0, 0, canvasH);
+      gradient.addColorStop(0, '#fbfdff');
+      gradient.addColorStop(1, '#eef8ff');
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, canvasW, canvasH);
+
+      ctx.fillStyle = 'rgba(226, 244, 255, 0.74)';
+      roundRect(42, 42, canvasW - 84, canvasH - 92, 28, true, false);
+      ctx.strokeStyle = '#dbeafe';
+      ctx.lineWidth = 2;
+      roundRect(42, 42, canvasW - 84, canvasH - 92, 28, false, true);
+
+      ctx.fillStyle = 'rgba(2, 132, 199, 0.10)';
+      roundRect(70, canvasH - 118, canvasW - 140, 36, 18, true, false);
+    }
+
+    function roundRect(x, y, w, h, r, fill, stroke) {
+      const radius = Math.min(r, w / 2, h / 2);
+      ctx.beginPath();
+      ctx.moveTo(x + radius, y);
+      ctx.lineTo(x + w - radius, y);
+      ctx.quadraticCurveTo(x + w, y, x + w, y + radius);
+      ctx.lineTo(x + w, y + h - radius);
+      ctx.quadraticCurveTo(x + w, y + h, x + w - radius, y + h);
+      ctx.lineTo(x + radius, y + h);
+      ctx.quadraticCurveTo(x, y + h, x, y + h - radius);
+      ctx.lineTo(x, y + radius);
+      ctx.quadraticCurveTo(x, y, x + radius, y);
+      ctx.closePath();
+      if (fill) ctx.fill();
+      if (stroke) ctx.stroke();
+    }
+
+    function drawLettuceWhole() {
+      const cx = canvasW / 2;
+      const cy = canvasH / 2 + 56;
+      drawBeaker(cx, cy);
+      drawLettucePlant(cx, cy + 12, state.visual.lettuceHealth);
+    }
+
+    function drawBeaker(cx, cy) {
+      const bw = Math.min(canvasW * 0.58, 520);
+      const bh = Math.min(canvasH * 0.58, 340);
+      const x = cx - bw / 2;
+      const y = cy - bh / 2 + 10;
+      ctx.save();
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.72)';
+      ctx.strokeStyle = 'rgba(14, 116, 144, 0.45)';
+      ctx.lineWidth = 3;
+      roundRect(x, y, bw, bh, 26, true, true);
+      ctx.fillStyle = 'rgba(125, 211, 252, 0.22)';
+      roundRect(x + 16, y + bh * 0.34, bw - 32, bh * 0.58, 18, true, false);
+      ctx.strokeStyle = 'rgba(14, 165, 233, 0.32)';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(x + 24, y + bh * 0.34);
+      ctx.quadraticCurveTo(cx, y + bh * 0.31, x + bw - 24, y + bh * 0.34);
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    function drawLettucePlant(cx, baseY, health) {
+      const h = Math.max(0, Math.min(1.15, health));
+      const wilt = 1 - Math.min(1, h);
+      ctx.save();
+      ctx.translate(cx, baseY);
+
+      ctx.fillStyle = mixColor('#9ae6b4', '#a3a07a', wilt * 0.65);
+      ctx.strokeStyle = mixColor('#15803d', '#6b6b3a', wilt * 0.65);
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(-18, 58);
+      ctx.quadraticCurveTo(-10, 14, 0, -8);
+      ctx.quadraticCurveTo(10, 14, 18, 58);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+
+      const leaves = [
+        { angle: -76, length: 162, width: 54, side: -1 },
+        { angle: -48, length: 190, width: 64, side: -1 },
+        { angle: -22, length: 176, width: 58, side: -1 },
+        { angle: 0, length: 198, width: 68, side: 0 },
+        { angle: 22, length: 176, width: 58, side: 1 },
+        { angle: 48, length: 190, width: 64, side: 1 },
+        { angle: 76, length: 162, width: 54, side: 1 }
+      ];
+      leaves.forEach((leaf, index) => drawLeaf(leaf, h, wilt, index));
+      ctx.restore();
+    }
+
+    function drawLeaf(leaf, health, wilt, index) {
+      const direction = leaf.side || (index % 2 ? 1 : -1);
+      const droopAngle = (20 + index * 2) * wilt * direction;
+      const limpDrop = 44 * wilt;
+      const curl = 18 * wilt * direction;
+      const shrink = 1 - wilt * 0.34;
+      const narrow = 1 - wilt * 0.42;
+      const angle = (leaf.angle + droopAngle) * Math.PI / 180;
+      const length = leaf.length * (0.72 + health * 0.28) * shrink;
+      const width = leaf.width * (0.66 + health * 0.34) * narrow;
+
+      ctx.save();
+      ctx.rotate(angle);
+      ctx.translate(0, limpDrop * 0.18);
+
+      const tipX = curl;
+      const tipY = -length + limpDrop;
+      const colorA = mixColor('#86efac', '#6f7d3e', wilt * 0.85);
+      const colorB = mixColor('#22c55e', '#4f6f2f', wilt * 0.85);
+      const grad = ctx.createLinearGradient(0, 20, tipX, tipY);
+      grad.addColorStop(0, colorB);
+      grad.addColorStop(1, colorA);
+      ctx.fillStyle = grad;
+      ctx.strokeStyle = mixColor('#14532d', '#5f5532', wilt * 0.8);
+      ctx.lineWidth = 2.2;
+
+      ctx.beginPath();
+      ctx.moveTo(0, 12);
+      ctx.bezierCurveTo(-width * 0.95, -length * 0.18 + limpDrop, -width * 0.78, -length * 0.72 + limpDrop * 0.7, tipX, tipY);
+      ctx.bezierCurveTo(width * 0.78, -length * 0.72 + limpDrop * 0.7, width * 0.95, -length * 0.18 + limpDrop, 0, 12);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.strokeStyle = `rgba(20, 83, 45, ${0.45 + wilt * 0.25})`;
+      ctx.lineWidth = 1.6;
+      ctx.beginPath();
+      ctx.moveTo(0, 10);
+      ctx.quadraticCurveTo(curl * 0.4, -length * 0.42 + limpDrop * 0.45, tipX, tipY + 12);
+      ctx.stroke();
+
+      const wrinkleCount = Math.round(2 + wilt * 7);
+      ctx.strokeStyle = `rgba(75, 85, 35, ${0.10 + wilt * 0.32})`;
+      ctx.lineWidth = 1.1;
+      for (let i = 0; i < wrinkleCount; i += 1) {
+        const y = -length * (0.20 + i * 0.075) + limpDrop * (0.25 + i * 0.04);
+        const side = i % 2 === 0 ? -1 : 1;
+        ctx.beginPath();
+        ctx.moveTo(side * 4, y);
+        ctx.quadraticCurveTo(side * width * 0.28, y + 8 + wilt * 8, side * width * 0.55, y + 1);
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
+
+    function drawLettuceCell() {
+      const cx = canvasW / 2;
+      const cy = canvasH / 2 + 24;
+      const health = Math.max(0, Math.min(1.1, state.visual.lettuceHealth));
+      const wilt = 1 - Math.min(1, health);
+      const wallW = Math.min(canvasW * 0.58, 470);
+      const wallH = Math.min(canvasH * 0.48, 280);
+      const x = cx - wallW / 2;
+      const y = cy - wallH / 2;
+      ctx.save();
+      ctx.fillStyle = '#f0fdf4';
+      ctx.strokeStyle = '#15803d';
+      ctx.lineWidth = 9;
+      roundRect(x, y, wallW, wallH, 22, true, true);
+
+      const gap = 16 + wilt * 55;
+      const innerW = wallW - gap * 2;
+      const innerH = wallH - gap * 2;
+      ctx.fillStyle = mixColor('#bbf7d0', '#d9f99d', wilt * 0.45);
+      ctx.strokeStyle = '#4ade80';
+      ctx.lineWidth = 4;
+      roundRect(cx - innerW / 2, cy - innerH / 2, innerW, innerH, 18 + wilt * 10, true, true);
+
+      ctx.fillStyle = 'rgba(56, 189, 248, 0.50)';
+      const waterW = innerW * (0.68 - wilt * 0.20);
+      const waterH = innerH * (0.60 - wilt * 0.24);
+      roundRect(cx - waterW / 2, cy - waterH / 2, waterW, waterH, 22, true, false);
+
+      // 수업 목표와 직접 관련 없는 내부 소기관 그림은 제거하여
+      // 물 이동과 세포 크기 변화에 집중하도록 했다.
+      ctx.restore();
+    }
+
+    function drawRbcScene() {
+      const cx = canvasW / 2;
+      const cy = canvasH / 2 + 18;
+      ctx.save();
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.76)';
+      ctx.strokeStyle = 'rgba(251, 113, 133, 0.28)';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.ellipse(cx, cy, Math.min(canvasW * 0.33, 300), Math.min(canvasH * 0.32, 195), 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+      drawRbc(cx, cy, state.visual.rbcSize, state.visual.rbcSpikes, state.visual.rbcBurst);
+      ctx.restore();
+    }
+
+    function drawRbc(cx, cy, size, spikes, burst) {
+      ctx.save();
+      ctx.translate(cx, cy);
+      const radius = 72 * size;
+      if (burst > 0.58) {
+        const progress = Math.min(1, (burst - 0.58) / 0.42);
+        ctx.globalAlpha = Math.max(0.26, 1 - progress * 0.55);
+        ctx.beginPath();
+        const points = 34;
+        for (let i = 0; i < points; i += 1) {
+          const angle = Math.PI * 2 * i / points;
+          const broken = i % 5 === 0 ? 0.54 : (i % 3 === 0 ? 1.13 : 0.94);
+          const r = radius * broken;
+          const x = Math.cos(angle) * r;
+          const y = Math.sin(angle) * r;
+          if (i === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+        ctx.closePath();
+        ctx.fillStyle = 'rgba(248, 113, 113, 0.52)';
+        ctx.fill();
+        ctx.strokeStyle = '#b91c1c';
+        ctx.lineWidth = 3;
+        ctx.stroke();
+        ctx.globalAlpha = 1;
+
+        ctx.fillStyle = 'rgba(185, 28, 28, 0.78)';
+        for (let i = 0; i < 10; i += 1) {
+          const angle = Math.PI * 2 * i / 10 + 0.18;
+          const d = radius + progress * 80 + (i % 2) * 14;
+          ctx.beginPath();
+          ctx.arc(Math.cos(angle) * d, Math.sin(angle) * d, Math.max(3, 9 * (1 - progress * 0.55)), 0, Math.PI * 2);
+          ctx.fill();
+        }
+      } else {
+        const swell = Math.min(1, burst / 0.58);
+        ctx.beginPath();
+        const points = 72;
+        for (let i = 0; i < points; i += 1) {
+          const angle = Math.PI * 2 * i / points;
+          const rough = 1 + Math.sin(angle * 13) * 0.10 * spikes;
+          const r = radius * rough * (1 + swell * 0.08);
+          const x = Math.cos(angle) * r;
+          const y = Math.sin(angle) * r * (0.93 + swell * 0.07);
+          if (i === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+        ctx.closePath();
+        const grad = ctx.createRadialGradient(-radius * 0.28, -radius * 0.28, radius * 0.1, 0, 0, radius * 1.1);
+        grad.addColorStop(0, '#fecaca');
+        grad.addColorStop(0.43, '#ef4444');
+        grad.addColorStop(1, '#991b1b');
+        ctx.fillStyle = grad;
+        ctx.fill();
+        ctx.strokeStyle = '#7f1d1d';
+        ctx.lineWidth = 2.5;
+        ctx.stroke();
+
+        if (spikes < 0.55 && swell < 0.8) {
+          ctx.fillStyle = 'rgba(254, 202, 202, 0.62)';
+          ctx.beginPath();
+          ctx.ellipse(0, 0, radius * 0.44 * (1 - swell * 0.45), radius * 0.30 * (1 - swell * 0.35), 0, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+      ctx.restore();
+    }
+
+    function drawWaterParticles() {
+      state.particles.forEach((particle) => {
+        const t = Math.min(1, particle.life / particle.maxLife);
+        const alpha = Math.sin(t * Math.PI) * 0.88;
+        const color = particle.direction === 'in' ? 'rgba(14, 165, 233,' : 'rgba(245, 158, 11,';
+        ctx.save();
+        ctx.globalAlpha = alpha;
+        ctx.strokeStyle = color + '0.22)';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(particle.x, particle.y);
+        ctx.lineTo(particle.x - (particle.tx - particle.sx) * 0.035, particle.y - (particle.ty - particle.sy) * 0.035);
+        ctx.stroke();
+        ctx.fillStyle = color + '0.92)';
+        ctx.beginPath();
+        ctx.arc(particle.x, particle.y, 4.2, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      });
+    }
+
+    function drawNetArrows(net) {
+      if (!net || net === 'none') return;
+      const geo = subjectGeometry();
+      const cx = geo.cx;
+      const cy = geo.cy;
+      const labelY = Math.max(58, cy - geo.innerR - 108);
+      const arrowY = labelY + 60;
+      const leftX = Math.max(92, cx - geo.innerR - 216);
+      const rightX = Math.min(canvasW - 92, cx + geo.innerR + 216);
+      const innerLeft = cx - geo.innerR * 0.58;
+      const innerRight = cx + geo.innerR * 0.58;
+      const targetY = cy - geo.innerR * 0.10;
+
+      if (net === 'in') {
+        drawArrowLabel('순이동: 밖 → 안', cx, labelY, '#0369a1', 'rgba(224, 242, 254, 0.96)');
+        strokeArrow(leftX, arrowY, innerLeft, targetY, '#0284c7', 9);
+        strokeArrow(rightX, arrowY, innerRight, targetY, '#0284c7', 9);
+      } else if (net === 'out') {
+        drawArrowLabel('순이동: 안 → 밖', cx, labelY, '#b45309', 'rgba(254, 243, 199, 0.96)');
+        strokeArrow(innerLeft, targetY, leftX, arrowY, '#f59e0b', 9);
+        strokeArrow(innerRight, targetY, rightX, arrowY, '#f59e0b', 9);
+      } else if (net === 'balanced') {
+        drawArrowLabel('순이동 거의 없음', cx, labelY, '#475569', 'rgba(241, 245, 249, 0.96)');
+        strokeArrow(leftX + 34, arrowY - 12, rightX - 34, arrowY - 12, '#64748b', 6);
+        strokeArrow(rightX - 34, arrowY + 24, leftX + 34, arrowY + 24, '#64748b', 6);
+      }
+    }
+
+    function strokeArrow(x1, y1, x2, y2, color, width) {
+      const angle = Math.atan2(y2 - y1, x2 - x1);
+      const head = Math.max(18, width * 2.2);
+      const drawLayer = (strokeStyle, fillStyle, lineWidth, alpha) => {
+        ctx.globalAlpha = alpha;
+        ctx.strokeStyle = strokeStyle;
+        ctx.fillStyle = fillStyle;
+        ctx.lineWidth = lineWidth;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(x2, y2);
+        ctx.lineTo(x2 - Math.cos(angle - Math.PI / 6) * head, y2 - Math.sin(angle - Math.PI / 6) * head);
+        ctx.lineTo(x2 - Math.cos(angle + Math.PI / 6) * head, y2 - Math.sin(angle + Math.PI / 6) * head);
+        ctx.closePath();
+        ctx.fill();
+      };
+      ctx.save();
+      drawLayer('rgba(255, 255, 255, 0.94)', 'rgba(255, 255, 255, 0.94)', width + 8, 1);
+      drawLayer(color, color, width, 0.93);
+      ctx.restore();
+    }
+
+    function drawArrowLabel(text, x, y, textColor, bgColor) {
+      ctx.save();
+      let fontSize = 15;
+      ctx.font = `900 ${fontSize}px Pretendard, sans-serif`;
+      const maxWidth = Math.min(240, canvasW - 120);
+      while (ctx.measureText(text).width > maxWidth && fontSize > 12) {
+        fontSize -= 1;
+        ctx.font = `900 ${fontSize}px Pretendard, sans-serif`;
+      }
+      const metrics = ctx.measureText(text);
+      const w = metrics.width + 30;
+      const h = fontSize + 20;
+      ctx.fillStyle = bgColor;
+      ctx.strokeStyle = textColor;
+      ctx.lineWidth = 1.4;
+      roundRect(x - w / 2, y - h / 2, w, h, h / 2, true, true);
+      ctx.fillStyle = textColor;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(text, x, y + 1);
+      ctx.restore();
+    }
+
+    function drawCanvasLabels() {
+      if (state.stage !== 'lab') return;
+      const condition = getCondition();
+      const labelText = state.experiment === 'lettuce'
+        ? (state.lettuceView === 'cell' ? '상추 세포 관찰' : '상추 조각 관찰')
+        : '적혈구 관찰';
+      drawSmallLabel(labelText, 76, 72, '#0f766e', 'rgba(204, 251, 241, 0.92)');
+      if (condition) {
+        drawSmallLabel(condition.label, canvasW - 78, 72, '#0369a1', 'rgba(224, 242, 254, 0.95)', 'right');
+      }
+    }
+
+    function drawSmallLabel(text, x, y, textColor, bgColor, align = 'left') {
+      ctx.save();
+      let fontSize = 14;
+      ctx.font = `850 ${fontSize}px Pretendard, sans-serif`;
+      const maxTextWidth = Math.min(190, canvasW - 120);
+      while (ctx.measureText(text).width > maxTextWidth && fontSize > 11) {
+        fontSize -= 1;
+        ctx.font = `850 ${fontSize}px Pretendard, sans-serif`;
+      }
+      const textW = ctx.measureText(text).width;
+      const w = textW + 24;
+      const h = fontSize + 16;
+      let left = align === 'right' ? x - w : x;
+      left = Math.max(16, Math.min(left, canvasW - w - 16));
+      ctx.fillStyle = bgColor;
+      roundRect(left, y - h / 2, w, h, h / 2, true, false);
+      ctx.fillStyle = textColor;
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(text, left + 12, y + 1);
+      ctx.restore();
+    }
+
+    function mixColor(hex1, hex2, amount) {
+      const a = parseInt(hex1.slice(1), 16);
+      const b = parseInt(hex2.slice(1), 16);
+      const ar = (a >> 16) & 255;
+      const ag = (a >> 8) & 255;
+      const ab = a & 255;
+      const br = (b >> 16) & 255;
+      const bg = (b >> 8) & 255;
+      const bb = b & 255;
+      const t = Math.max(0, Math.min(1, amount));
+      const rr = Math.round(ar + (br - ar) * t);
+      const rg = Math.round(ag + (bg - ag) * t);
+      const rb = Math.round(ab + (bb - ab) * t);
+      return `rgb(${rr}, ${rg}, ${rb})`;
+    }
+
+    $$('#experimentTabs .tab-btn').forEach((button) => {
+      button.addEventListener('click', () => setExperiment(button.dataset.experiment));
+    });
+
+    $('#goLabBtn').addEventListener('click', () => {
+      if (teacher.locked) return;
+      if (validatePrediction()) goStage('lab');
+    });
+
+    $('#backPredictionBtn').addEventListener('click', () => {
+      if (!teacher.locked) goStage('prediction');
+    });
+
+    $('#goCompareBtn').addEventListener('click', () => {
+      if (teacher.locked) return;
+      saveCurrentTextareas();
+      if (!state.observations[state.experiment].trim()) {
+        labStatus.innerHTML = '관찰 기록을 먼저 한 문장 이상 작성해보세요.';
+        observationText.focus();
+        return;
+      }
+      if (state.observed[state.experiment].size === 0) {
+        labStatus.innerHTML = '조건을 하나 이상 선택해 관찰한 뒤 비교 단계로 이동하세요.';
+        return;
+      }
+      goStage('compare');
+    });
+
+    $('#backLabBtn').addEventListener('click', () => {
+      if (!teacher.locked) goStage('lab');
+    });
+
+    $('#clearObservationBtn').addEventListener('click', () => {
+      if (teacher.locked) return;
+      observationText.value = '';
+      state.observations[state.experiment] = '';
+      observationText.focus();
+    });
+
+    $('#copyReportBtn').addEventListener('click', () => {
+      if (teacher.locked) return;
+      makeReport();
+    });
+
+    $('#restartBtn').addEventListener('click', () => {
+      if (teacher.locked) return;
+      saveCurrentTextareas();
+      state.conditionId = null;
+      state.observed[state.experiment].clear();
+      state.particles = [];
+      resetTargetToStart();
+      reportBox.style.display = 'none';
+      goStage('prediction');
+    });
+
+    viewToggleBtn.addEventListener('click', () => {
+      if (teacher.locked) return;
+      state.lettuceView = state.lettuceView === 'whole' ? 'cell' : 'whole';
+      viewToggleBtn.textContent = state.lettuceView === 'whole' ? '현미경 보기' : '전체 상추 보기';
+      state.particles = [];
+      renderConditionButtons();
+      resizeCanvas();
+    });
+
+    $('#resetViewBtn').addEventListener('click', () => {
+      if (teacher.locked) return;
+      state.conditionId = null;
+      state.particles = [];
+      resetTargetToStart();
+      labStatus.innerHTML = getExperiment().defaultStatus;
+      renderConditionButtons();
+    });
+
+    observationText.addEventListener('input', () => {
+      state.observations[state.experiment] = observationText.value;
+    });
+
+    compareText.addEventListener('input', () => {
+      state.comparisons[state.experiment] = compareText.value;
+    });
+
+    teacherOpenBtn.addEventListener('click', () => {
+      teacherPanel.hidden = !teacherPanel.hidden;
+      if (!teacherPanel.hidden) teacherCode.focus();
+    });
+
+    teacherCloseBtn.addEventListener('click', () => {
+      teacherPanel.hidden = true;
+    });
+
+    function teacherCodeMatches(value) {
+      const input = value.trim();
+      if (!/^\d{4}$/.test(input)) return false;
+      let hash = 2166136261;
+      for (let i = 0; i < input.length; i += 1) {
+        hash ^= input.charCodeAt(i);
+        hash = Math.imul(hash, 16777619);
+      }
+      return (hash >>> 0) === 1417607055;
+    }
+
+    teacherUnlockBtn.addEventListener('click', () => {
+      if (teacherCodeMatches(teacherCode.value)) {
+        teacher.active = true;
+        teacherLogin.hidden = true;
+        teacherUnlocked.hidden = false;
+        teacherLoginMsg.textContent = '선생님모드가 열렸습니다.';
+        teacherLoginMsg.style.color = 'var(--muted)';
+        updateTeacherBanner();
+        renderSide();
+      } else {
+        teacherLoginMsg.textContent = '코드를 다시 확인하세요.';
+        teacherLoginMsg.style.color = 'var(--rose)';
+        teacherCode.select();
+      }
+    });
+
+    teacherCode.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') teacherUnlockBtn.click();
+    });
+
+    toggleParticles.addEventListener('change', () => {
+      teacher.showParticles = toggleParticles.checked;
+      updateTeacherBanner();
+    });
+
+    toggleArrows.addEventListener('change', () => {
+      teacher.showArrows = toggleArrows.checked;
+      updateTeacherBanner();
+    });
+
+    toggleLabels.addEventListener('change', () => {
+      teacher.showLabels = toggleLabels.checked;
+      updateTeacherBanner();
+    });
+
+    toggleLock.addEventListener('change', () => {
+      teacher.locked = toggleLock.checked;
+      updateLockState();
+      updateTeacherBanner();
+    });
+
+    speedRange.addEventListener('input', () => {
+      teacher.speed = Number(speedRange.value);
+      speedLabel.textContent = `${teacher.speed.toFixed(1)}배`;
+    });
+
+    $$('.teacher-actions [data-prompt]').forEach((button) => {
+      button.addEventListener('click', () => setTeacherPrompt(button.dataset.prompt));
+    });
+
+    toggleAnswerBtn.addEventListener('click', () => {
+      teacher.showAnswer = !teacher.showAnswer;
+      toggleAnswerBtn.textContent = teacher.showAnswer ? '정답 예시 숨기기' : '정답 예시 표시';
+      renderSide();
+    });
+
+    autoDemoBtn.addEventListener('click', startAutoDemo);
+
+    window.addEventListener('resize', () => {
+      renderConditionButtons();
+      resizeCanvas();
+    });
+
+    updateUI();
+    goStage('prediction');
+    resizeCanvas();
+    animate();
+  </script>
+</body>
+</html>
